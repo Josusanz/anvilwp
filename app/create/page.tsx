@@ -59,42 +59,48 @@ export default function CreatePage() {
     sections: [],
     primaryCta: '',
   })
+  const [selectedSections, setSelectedSections] = useState<string[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
   const [themeZipUrl, setThemeZipUrl] = useState<string | null>(null)
   const [previewHtml, setPreviewHtml] = useState('')
   const [showInput, setShowInput] = useState(false)
+  const [questionShown, setQuestionShown] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
+  const isProcessing = useRef(false)
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
   useEffect(() => {
-    if (currentStep === 0 && messages.length === 1) {
-      const timer = setTimeout(() => showNextQuestion(), 500)
+    if (currentStep === 0 && messages.length === 1 && !questionShown) {
+      const timer = setTimeout(() => {
+        setQuestionShown(true)
+        showNextQuestion()
+      }, 500)
       return () => clearTimeout(timer)
     }
-  }, [])
+  }, [currentStep, messages.length, questionShown])
 
   const showNextQuestion = () => {
-    if (currentStep >= steps.length) {
-      generateTheme()
-      return
-    }
+    if (isProcessing.current) return
+    if (currentStep >= steps.length) return
 
     const step = steps[currentStep]
     if (!step) return
 
-    setMessages(prev => {
-      const lastMsg = prev[prev.length - 1]
-      if (lastMsg?.content === step.question) return prev
-      return [...prev, {
-        role: 'assistant',
-        content: step.question,
-        options: step.options,
-      }]
-    })
+    // Check if question already shown
+    const lastMsg = messages[messages.length - 1]
+    if (lastMsg?.content === step.question && lastMsg.role === 'assistant') {
+      return
+    }
+
+    setMessages(prev => [...prev, {
+      role: 'assistant',
+      content: step.question,
+      options: step.options,
+    }])
 
     if (step.type === 'text') {
       setTimeout(() => setShowInput(true), 100)
@@ -103,12 +109,21 @@ export default function CreatePage() {
     }
   }
 
-  const handleAnswer = (answer: string | string[]) => {
+  const handleAnswer = async (answer: string | string[]) => {
+    if (isProcessing.current) return
+    isProcessing.current = true
+
     const step = steps[currentStep]
-    if (!step) return
+    if (!step) {
+      isProcessing.current = false
+      return
+    }
 
     const answerText = Array.isArray(answer) ? answer.join(', ') : answer
-    if (!answerText && !step.optional) return
+    if (!answerText && !step.optional) {
+      isProcessing.current = false
+      return
+    }
 
     setShowInput(false)
     setMessages(prev => [...prev, { role: 'user', content: answerText || 'Saltar' }])
@@ -119,25 +134,29 @@ export default function CreatePage() {
     }
     setFormData(newFormData)
 
-    setTimeout(() => {
-      const nextStep = currentStep + 1
-      setCurrentStep(nextStep)
+    // Wait for UI update
+    await new Promise(resolve => setTimeout(resolve, 400))
 
-      if (nextStep < steps.length) {
-        setTimeout(() => showNextQuestion(), 300)
-      } else {
-        setTimeout(() => generateTheme(), 500)
-      }
-    }, 400)
+    const nextStep = currentStep + 1
+    setCurrentStep(nextStep)
+
+    if (nextStep < steps.length) {
+      await new Promise(resolve => setTimeout(resolve, 300))
+      isProcessing.current = false
+      showNextQuestion()
+    } else {
+      isProcessing.current = false
+      setTimeout(() => generateTheme(newFormData), 500)
+    }
   }
 
-  const generateTheme = async () => {
+  const generateTheme = async (data: FormData) => {
     setIsGenerating(true)
     setShowInput(false)
     setMessages(prev => [...prev, { role: 'assistant', content: '¡Perfecto! Generando tu theme...' }])
 
     try {
-      const previewHtmlContent = generatePreviewHTML(formData)
+      const previewHtmlContent = generatePreviewHTML(data)
       setPreviewHtml(previewHtmlContent)
 
       setMessages(prev => [...prev, { role: 'assistant', content: '✨ Creando estructura...' }])
@@ -149,10 +168,13 @@ export default function CreatePage() {
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       })
 
-      if (!response.ok) throw new Error('Error')
+      if (!response.ok) {
+        const errorText = await response.text()
+        throw new Error(`Error ${response.status}: ${errorText}`)
+      }
 
       const result = await response.json()
 
@@ -173,8 +195,9 @@ export default function CreatePage() {
 
       setIsComplete(true)
     } catch (error) {
-      console.error(error)
-      setMessages(prev => [...prev, { role: 'assistant', content: '❌ Error. Intenta de nuevo.' }])
+      console.error('Error generando theme:', error)
+      const errorMsg = error instanceof Error ? error.message : 'Error desconocido'
+      setMessages(prev => [...prev, { role: 'assistant', content: `❌ Error: ${errorMsg}. Intenta de nuevo.` }])
     } finally {
       setIsGenerating(false)
     }
@@ -301,18 +324,37 @@ export default function CreatePage() {
                         <div className="space-y-2">
                           {msg.options.map((opt) => (
                             <label key={opt} className="flex items-center gap-2 p-2 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600">
-                              <input type="checkbox" checked={formData.sections?.includes(opt)} onChange={(e) => {
-                                const newSections = e.target.checked ? [...(formData.sections || []), opt] : (formData.sections || []).filter(s => s !== opt)
-                                setFormData(prev => ({ ...prev, sections: newSections }))
-                              }} className="w-4 h-4" />
+                              <input
+                                type="checkbox"
+                                checked={selectedSections.includes(opt)}
+                                onChange={(e) => {
+                                  const newSections = e.target.checked
+                                    ? [...selectedSections, opt]
+                                    : selectedSections.filter(s => s !== opt)
+                                  setSelectedSections(newSections)
+                                }}
+                                className="w-4 h-4"
+                              />
                               <span className="text-sm">{opt}</span>
                             </label>
                           ))}
-                          <button onClick={() => handleAnswer(formData.sections)} disabled={formData.sections.length < 2} className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50 hover:bg-blue-700">Continuar →</button>
+                          <button
+                            onClick={() => handleAnswer(selectedSections)}
+                            disabled={selectedSections.length < 2}
+                            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50 hover:bg-blue-700"
+                          >
+                            Continuar →
+                          </button>
                         </div>
                       ) : (
                         msg.options.map((opt) => (
-                          <button key={opt} onClick={() => handleAnswer(opt)} className="w-full text-left px-4 py-2 bg-gray-700 rounded-lg text-sm hover:bg-gray-600">{opt}</button>
+                          <button
+                            key={opt}
+                            onClick={() => handleAnswer(opt)}
+                            className="w-full text-left px-4 py-2 bg-gray-700 rounded-lg text-sm hover:bg-gray-600"
+                          >
+                            {opt}
+                          </button>
                         ))
                       )}
                     </div>
