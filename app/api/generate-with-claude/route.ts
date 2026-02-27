@@ -774,6 +774,9 @@ function generateFrontPageTemplate(themeSlug: string, data: any) {
   if (data.testimonials?.items?.length) patterns.push(`<!-- wp:pattern {"slug":"${themeSlug}/testimonials"} /-->`)
   if (data.cta) patterns.push(`<!-- wp:pattern {"slug":"${themeSlug}/cta"} /-->`)
 
+  console.log('=== FRONT-PAGE.HTML TEMPLATE ===')
+  console.log(`Including ${patterns.length} patterns:`, patterns.map(p => p.match(/slug":"([^"]+)"/)?.[1]))
+
   return `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 <!-- wp:group {"tagName":"main","layout":{"type":"constrained"}} -->
 <main class="wp-block-group">
