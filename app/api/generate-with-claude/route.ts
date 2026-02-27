@@ -27,12 +27,14 @@ export async function POST(request: NextRequest) {
     }
 
     // IMPROVED: Better prompt with more sections
-    const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 8192, // Increased for more content
-      messages: [{
-        role: 'user',
-        content: `Eres un experto diseñador web y copywriter. El usuario quiere crear una web WordPress y te dice: "${userMessage}"
+    let message
+    try {
+      message = await anthropic.messages.create({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 8192, // Increased for more content
+        messages: [{
+          role: 'user',
+          content: `Eres un experto diseñador web y copywriter. El usuario quiere crear una web WordPress y te dice: "${userMessage}"
 
 Genera un objeto JSON con la siguiente estructura (sin markdown, solo JSON puro):
 
@@ -89,20 +91,35 @@ IMPORTANTE:
 - Mínimo 3 testimonials, máximo 6
 - Contenido REAL y específico al tipo de negocio
 - Responde SOLO con el JSON, sin explicaciones`
-      }],
-    })
+        }],
+      })
+    } catch (apiError) {
+      console.error('Anthropic API error:', apiError)
+      throw new Error(`Error llamando a la API de Claude: ${apiError instanceof Error ? apiError.message : 'Unknown API error'}`)
+    }
 
     const content = message.content[0]
     if (content.type !== 'text') {
       throw new Error('Respuesta inesperada de Claude')
     }
 
+    // Better error logging
+    console.log('Claude response:', content.text.substring(0, 500))
+
     const jsonMatch = content.text.match(/\{[\s\S]*\}/)
     if (!jsonMatch) {
-      throw new Error('No se pudo extraer JSON de la respuesta')
+      console.error('Failed to extract JSON. Response was:', content.text)
+      throw new Error(`No se pudo extraer JSON de la respuesta. Respuesta: ${content.text.substring(0, 200)}`)
     }
 
-    const themeData = JSON.parse(jsonMatch[0])
+    let themeData
+    try {
+      themeData = JSON.parse(jsonMatch[0])
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError)
+      console.error('Attempted to parse:', jsonMatch[0].substring(0, 500))
+      throw new Error(`Error al parsear JSON: ${parseError instanceof Error ? parseError.message : 'Unknown'}. Contenido: ${jsonMatch[0].substring(0, 200)}`)
+    }
 
     const themeName = themeData.businessName
       .toLowerCase()
