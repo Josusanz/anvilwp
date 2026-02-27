@@ -12,10 +12,17 @@ export async function POST(request: NextRequest) {
   try {
     const { userMessage } = await request.json()
 
-    if (!userMessage || !process.env.ANTHROPIC_API_KEY) {
+    if (!userMessage) {
       return NextResponse.json(
-        { error: 'Faltan parámetros requeridos' },
+        { error: 'Por favor describe el tipo de web que quieres crear' },
         { status: 400 }
+      )
+    }
+
+    if (!process.env.ANTHROPIC_API_KEY) {
+      return NextResponse.json(
+        { error: 'API key de Anthropic no configurada. Configura ANTHROPIC_API_KEY en las variables de entorno.' },
+        { status: 500 }
       )
     }
 

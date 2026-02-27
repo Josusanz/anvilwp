@@ -87,6 +87,11 @@ export default function CreatePage() {
     try {
       // Get parsed data from last interaction
       const lastUserMsg = messages.filter(m => m.role === 'user').pop()?.content || ''
+
+      if (!lastUserMsg) {
+        throw new Error('No se encontró descripción de la web')
+      }
+
       const parsed = parseUserIntent(lastUserMsg)
 
       const previewHtmlContent = generatePreviewHTML(parsed)
