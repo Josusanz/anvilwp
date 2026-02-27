@@ -174,6 +174,7 @@ Text Domain: ${themeSlug}
 
 function generateFunctionsPHP(data: any) {
   const { themeSlug } = data
+  const functionPrefix = themeSlug.replace(/-/g, '_')
   return `<?php
 /**
  * ${data.businessName} Theme
@@ -194,7 +195,7 @@ add_action('wp_enqueue_scripts', function() {
     wp_enqueue_script('${themeSlug}-js', get_template_directory_uri() . '/assets/js/theme.js', [], '1.0.0', true);
 
     // Localize script
-    wp_localize_script('${themeSlug}-js', '${themeSlug}Data', [
+    wp_localize_script('${themeSlug}-js', '${functionPrefix}Data', [
         'restUrl' => rest_url('${themeSlug}/v1/'),
         'nonce' => wp_create_nonce('wp_rest'),
     ]);
@@ -211,12 +212,12 @@ add_action('init', function() {
 add_action('rest_api_init', function() {
     register_rest_route('${themeSlug}/v1', '/contact', [
         'methods' => 'POST',
-        'callback' => '${themeSlug}_handle_contact_form',
+        'callback' => '${functionPrefix}_handle_contact_form',
         'permission_callback' => '__return_true',
     ]);
 });
 
-function ${themeSlug}_handle_contact_form($request) {
+function ${functionPrefix}_handle_contact_form($request) {
     $params = $request->get_params();
 
     // Validate
@@ -366,6 +367,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 function generateThemeJS(themeSlug: string) {
+  const varName = themeSlug.replace(/-/g, '_')
   return `// ${themeSlug} Theme JavaScript
 (function() {
   'use strict';
@@ -380,7 +382,7 @@ function generateThemeJS(themeSlug: string) {
       const data = Object.fromEntries(formData.entries());
 
       try {
-        const response = await fetch(window.${themeSlug}Data.restUrl + 'contact', {
+        const response = await fetch(window.${varName}Data.restUrl + 'contact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
