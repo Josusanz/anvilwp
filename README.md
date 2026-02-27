@@ -160,7 +160,26 @@ your-theme/
 
 ## 💻 For Developers
 
-### Local Development
+### Development Setup (Web App)
+
+If you want to run AnvilWP web app locally:
+
+```bash
+git clone https://github.com/Josusanz/anvilwp.git
+cd anvilwp
+npm install
+
+# Configure Anthropic Claude API (required for AI generation)
+cp .env.local.example .env.local
+# Edit .env.local and add: ANTHROPIC_API_KEY=sk-ant-xxx
+
+npm run dev
+# Open http://localhost:3000
+```
+
+Get your Claude API key from: https://console.anthropic.com/
+
+### Local Development (Themes)
 
 ```bash
 # Clone your generated theme
