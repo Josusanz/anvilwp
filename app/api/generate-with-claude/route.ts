@@ -1067,6 +1067,127 @@ function generateCTAPattern(themeSlug: string, cta: any) {
 <!-- /wp:group -->`
 }
 
+// ============================================
+// NEW PREMIUM PATTERNS - WordPress.org Inspired
+// ============================================
+
+function generateHeroCoverPattern(themeSlug: string, data: any) {
+  // Twenty Twenty-Five style - Full-width cover with background image
+  return `<?php
+/**
+ * Title: Hero Full Width Cover - Premium
+ * Slug: ${themeSlug}/hero-cover
+ * Categories: ${themeSlug}, hero, featured
+ * Keywords: hero, banner, cover, full-width
+ * Block Types: core/cover
+ * Viewport Width: 1400
+ */
+?>
+<!-- wp:cover {"url":"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1920&q=80","dimRatio":30,"overlayColor":"black","minHeight":"min(100vh, 900px)","minHeightUnit":"px","contentPosition":"center center","align":"full"} -->
+<div class="wp-block-cover alignfull">
+<span aria-hidden="true" class="wp-block-cover__background has-black-background-color has-background-dim-30 has-background-dim"></span>
+<img class="wp-block-cover__image-background" alt="" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1920&q=80" data-object-fit="cover"/>
+<div class="wp-block-cover__inner-container">
+
+<!-- wp:group {"layout":{"type":"constrained","contentSize":"900px"}} -->
+<div class="wp-block-group is-layout-constrained wp-block-group-is-layout-constrained">
+
+${data.hero?.badge ? `<!-- wp:paragraph {"align":"center","className":"badge"} -->
+<p class="has-text-align-center badge">${data.hero.badge}</p>
+<!-- /wp:paragraph -->
+
+` : ''}<!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(3rem, 6vw, 5rem)","lineHeight":"1.1"}}} -->
+<h1 class="wp-block-heading has-text-align-center" style="font-size:clamp(3rem, 6vw, 5rem);line-height:1.1">${data.hero?.title || data.businessName}<br><span class="gradient-text">${data.tagline}</span></h1>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"clamp(1.125rem, 2vw, 1.5rem)"}}} -->
+<p class="has-text-align-center" style="font-size:clamp(1.125rem, 2vw, 1.5rem)">${data.hero?.subtitle || ''}</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
+<div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex">
+<!-- wp:button {"className":"btn-primary"} -->
+<div class="wp-block-button"><a class="wp-block-button__link btn-primary wp-element-button">${data.hero?.cta || 'Comenzar'} →</a></div>
+<!-- /wp:button -->
+
+<!-- wp:button {"className":"btn-secondary"} -->
+<div class="wp-block-button"><a class="wp-block-button__link btn-secondary wp-element-button">Más información</a></div>
+<!-- /wp:button -->
+</div>
+<!-- /wp:buttons -->
+
+</div>
+<!-- /wp:group -->
+
+</div>
+</div>
+<!-- /wp:cover -->`
+}
+
+function generateHeroSplitPattern(themeSlug: string, data: any) {
+  // Split layout - Image left, content right
+  return `<?php
+/**
+ * Title: Hero Split Layout - Premium
+ * Slug: ${themeSlug}/hero-split
+ * Categories: ${themeSlug}, hero, featured
+ * Keywords: hero, split, two-column, image
+ * Viewport Width: 1400
+ */
+?>
+<!-- wp:group {"align":"full","className":"section-padding","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull section-padding has-global-padding is-layout-constrained wp-block-group-is-layout-constrained">
+
+<!-- wp:columns {"verticalAlignment":"center","align":"wide"} -->
+<div class="wp-block-columns alignwide are-vertically-aligned-center is-layout-flex wp-block-columns-is-layout-flex">
+
+<!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
+<div class="wp-block-column is-vertically-aligned-center is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:50%">
+
+${data.hero?.badge ? `<!-- wp:paragraph {"className":"badge"} -->
+<p class="badge">${data.hero.badge}</p>
+<!-- /wp:paragraph -->
+
+` : ''}<!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(2.5rem, 5vw, 4rem)","lineHeight":"1.1"}}} -->
+<h1 class="wp-block-heading" style="font-size:clamp(2.5rem, 5vw, 4rem);line-height:1.1">${data.hero?.title || data.businessName}<br><span class="gradient-text">${data.tagline}</span></h1>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"style":{"typography":{"fontSize":"1.25rem"}}} -->
+<p style="font-size:1.25rem">${data.hero?.subtitle || ''}</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons -->
+<div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex">
+<!-- wp:button {"className":"btn-primary"} -->
+<div class="wp-block-button"><a class="wp-block-button__link btn-primary wp-element-button">${data.hero?.cta || 'Comenzar'} →</a></div>
+<!-- /wp:button -->
+
+<!-- wp:button {"className":"btn-secondary"} -->
+<div class="wp-block-button"><a class="wp-block-button__link btn-secondary wp-element-button">Explorar</a></div>
+<!-- /wp:button -->
+</div>
+<!-- /wp:buttons -->
+
+</div>
+<!-- /wp:column -->
+
+<!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
+<div class="wp-block-column is-vertically-aligned-center is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:50%">
+
+<!-- wp:image {"sizeSlug":"large","linkDestination":"none","className":"hero-image","style":{"border":{"radius":"16px"}}} -->
+<figure class="wp-block-image size-large has-custom-border hero-image"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&q=80" alt="${data.businessName}" style="border-radius:16px"/></figure>
+<!-- /wp:image -->
+
+</div>
+<!-- /wp:column -->
+
+</div>
+<!-- /wp:columns -->
+
+</div>
+<!-- /wp:group -->`
+}
+
 function generateHeader(data: any) {
   return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"24px","bottom":"24px"}},"position":{"type":"sticky","top":"0px"}},"backgroundColor":"surface","layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull has-surface-background-color has-background has-global-padding is-layout-constrained wp-block-group-is-layout-constrained" style="padding-top:24px;padding-bottom:24px">
