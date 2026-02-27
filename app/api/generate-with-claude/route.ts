@@ -26,68 +26,63 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // IMPROVED: Better prompt with explicit structure
+    // Simplified, more reliable prompt
     let message
     try {
       message = await anthropic.messages.create({
         model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 8192,
+        max_tokens: 4096, // Reduced to avoid issues
         messages: [{
           role: 'user',
-          content: `ERES UN EXPERTO EN CREAR WEBSITES PREMIUM COMPLETOS.
+          content: `Genera un objeto JSON completo para una web WordPress basada en: "${userMessage}"
 
-Usuario solicita: "${userMessage}"
+Estructura requerida (responde SOLO con JSON válido, sin markdown):
 
-GENERA UN JSON COMPLETO CON **TODAS** LAS SECCIONES. Usa este template exacto y completa CADA campo:
-
-\`\`\`json
 {
-  "businessName": "Nombre extraído o sugerido",
-  "businessType": "tipo relevante",
-  "tagline": "Frase memorable",
-  "description": "Meta description 160 chars",
+  "businessName": "Nombre del negocio",
+  "businessType": "Restaurante|Agencia|eCommerce|Blog|SaaS|Portfolio",
+  "tagline": "Frase memorable y profesional",
+  "description": "Meta description SEO de 160 caracteres",
   "hero": {
-    "badge": "✨ Badge llamativo",
-    "title": "Título impactante",
-    "subtitle": "Subtítulo que vende",
-    "cta": "Botón acción"
+    "badge": "Badge opcional con emoji",
+    "title": "Título principal impactante",
+    "subtitle": "Subtítulo que explica el valor",
+    "cta": "Texto del botón de acción"
   },
   "features": {
-    "title": "Por qué elegirnos",
+    "title": "Título de la sección",
     "items": [
-      {"icon": "🚀", "title": "Feature 1", "description": "Beneficio específico y convincente"},
-      {"icon": "⚡", "title": "Feature 2", "description": "Beneficio específico y convincente"},
-      {"icon": "💎", "title": "Feature 3", "description": "Beneficio específico y convincente"},
-      {"icon": "🎯", "title": "Feature 4", "description": "Beneficio específico y convincente"}
+      {"icon": "🚀", "title": "Feature", "description": "Beneficio específico"},
+      {"icon": "⚡", "title": "Feature", "description": "Beneficio específico"},
+      {"icon": "💎", "title": "Feature", "description": "Beneficio específico"},
+      {"icon": "🎯", "title": "Feature", "description": "Beneficio específico"}
     ]
   },
   "services": {
-    "title": "Nuestros servicios",
+    "title": "Título de la sección",
     "items": [
-      {"icon": "🔥", "title": "Servicio Premium 1", "description": "Descripción detallada del servicio"},
-      {"icon": "✨", "title": "Servicio Premium 2", "description": "Descripción detallada del servicio"},
-      {"icon": "💼", "title": "Servicio Premium 3", "description": "Descripción detallada del servicio"},
-      {"icon": "🎨", "title": "Servicio Premium 4", "description": "Descripción detallada del servicio"}
+      {"icon": "🔥", "title": "Servicio", "description": "Descripción del servicio"},
+      {"icon": "✨", "title": "Servicio", "description": "Descripción del servicio"},
+      {"icon": "💼", "title": "Servicio", "description": "Descripción del servicio"}
     ]
   },
   "stats": [
-    {"value": "500+", "label": "Clientes satisfechos"},
-    {"value": "98%", "label": "Tasa de éxito"},
-    {"value": "15 años", "label": "Experiencia"}
+    {"value": "500+", "label": "Métrica"},
+    {"value": "98%", "label": "Métrica"},
+    {"value": "15+", "label": "Métrica"}
   ],
   "testimonials": {
-    "title": "Lo que dicen nuestros clientes",
+    "title": "Título de la sección",
     "items": [
-      {"quote": "Testimonio convincente y específico sobre resultados reales", "author": "Nombre Apellido", "role": "CEO", "company": "Empresa Real"},
-      {"quote": "Otro testimonio detallado sobre experiencia positiva", "author": "Nombre Apellido", "role": "Director", "company": "Otra Empresa"},
-      {"quote": "Testimonio sobre transformación lograda", "author": "Nombre Apellido", "role": "Fundador", "company": "Startup XYZ"},
-      {"quote": "Testimonio sobre calidad del servicio", "author": "Nombre Apellido", "role": "Manager", "company": "Corp ABC"}
+      {"quote": "Testimonio", "author": "Nombre", "role": "Cargo", "company": "Empresa"},
+      {"quote": "Testimonio", "author": "Nombre", "role": "Cargo", "company": "Empresa"},
+      {"quote": "Testimonio", "author": "Nombre", "role": "Cargo", "company": "Empresa"}
     ]
   },
   "cta": {
-    "title": "¿Listo para transformar tu negocio?",
-    "subtitle": "Contáctanos hoy y descubre cómo podemos ayudarte",
-    "button": "Comenzar ahora"
+    "title": "Llamada a la acción",
+    "subtitle": "Subtítulo motivador",
+    "button": "Texto del botón"
   },
   "colors": {
     "primary": "#0A1E3D",
@@ -95,23 +90,33 @@ GENERA UN JSON COMPLETO CON **TODAS** LAS SECCIONES. Usa este template exacto y 
     "secondary": "#8B5CF6"
   }
 }
-\`\`\`
 
-REGLAS OBLIGATORIAS:
-✓ DEBES incluir MÍNIMO 4 features (usa emojis relevantes)
-✓ DEBES incluir MÍNIMO 4 services (contenido específico)
-✓ DEBES incluir EXACTAMENTE 3 stats relevantes
-✓ DEBES incluir MÍNIMO 4 testimonials creíbles
-✓ DEBES incluir sección CTA completa
-✓ Contenido en español, profesional, específico al negocio
-✓ NO uses placeholder text, genera contenido REAL
-
-RESPONDE SOLO CON EL JSON (sin \`\`\`json, sin markdown, solo el objeto)`
+IMPORTANTE: Genera contenido REAL y específico en español. Mínimo 4 features, 3 services, 3 stats, 3 testimonials. Responde SOLO con el objeto JSON.`
         }],
       })
-    } catch (apiError) {
-      console.error('Anthropic API error:', apiError)
-      throw new Error(`Error llamando a la API de Claude: ${apiError instanceof Error ? apiError.message : 'Unknown API error'}`)
+    } catch (apiError: any) {
+      console.error('=== ANTHROPIC API ERROR ===')
+      console.error('Error object:', apiError)
+      console.error('Error type:', apiError?.type)
+      console.error('Error message:', apiError?.message)
+      console.error('Error status:', apiError?.status)
+
+      // More detailed error message
+      let errorMsg = 'Error llamando a la API de Claude'
+      if (apiError?.message) {
+        errorMsg += `: ${apiError.message}`
+      }
+      if (apiError?.type === 'invalid_request_error') {
+        errorMsg = 'Solicitud inválida a Claude API. Verifica la configuración.'
+      }
+      if (apiError?.status === 401) {
+        errorMsg = 'API key inválida o expirada'
+      }
+      if (apiError?.status === 429) {
+        errorMsg = 'Límite de uso excedido. Intenta de nuevo en unos minutos.'
+      }
+
+      throw new Error(errorMsg)
     }
 
     const content = message.content[0]
