@@ -42,3 +42,9 @@ logs/
 # Temporary files
 tmp/
 temp/
+
+# Docs
+docs/
+public/
+examples/
+.github/
