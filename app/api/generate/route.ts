@@ -89,12 +89,12 @@ Text Domain: ${themeSlug}
       "typography": {
         "fontFamilies": [
           {
-            "fontFamily": "\\"Plus Jakarta Sans\\", sans-serif",
+            "fontFamily": "'Plus Jakarta Sans', sans-serif",
             "slug": "jakarta",
             "name": "Plus Jakarta Sans"
           },
           {
-            "fontFamily": "\\"Inter\\", sans-serif",
+            "fontFamily": "'Inter', sans-serif",
             "slug": "inter",
             "name": "Inter"
           }
