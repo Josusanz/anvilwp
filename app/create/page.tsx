@@ -123,8 +123,69 @@ export default function CreatePageLovable() {
   }
 
   const generatePreviewHTML = (data: any) => {
-    // Using the improved preview generator would go here
-    // For now, using simplified version
+    const featuresSection = data.features?.items?.length ? `
+  <section class="section">
+    <h2>${data.features.title || 'Características'}</h2>
+    <div class="grid">
+      ${data.features.items.map((item: any) => `
+        <div class="card">
+          <div class="icon">${item.icon || '✨'}</div>
+          <h3>${item.title}</h3>
+          <p>${item.description}</p>
+        </div>
+      `).join('')}
+    </div>
+  </section>` : ''
+
+    const servicesSection = data.services?.items?.length ? `
+  <section class="section">
+    <h2>${data.services.title || 'Servicios'}</h2>
+    <div class="grid">
+      ${data.services.items.map((item: any) => `
+        <div class="card">
+          <div class="icon">${item.icon || '💼'}</div>
+          <h3>${item.title}</h3>
+          <p>${item.description}</p>
+        </div>
+      `).join('')}
+    </div>
+  </section>` : ''
+
+    const statsSection = data.stats?.length ? `
+  <section class="section stats">
+    <div class="stats-grid">
+      ${data.stats.map((stat: any) => `
+        <div class="stat">
+          <div class="stat-value gradient">${stat.value}</div>
+          <div class="stat-label">${stat.label}</div>
+        </div>
+      `).join('')}
+    </div>
+  </section>` : ''
+
+    const testimonialsSection = data.testimonials?.items?.length ? `
+  <section class="section">
+    <h2>${data.testimonials.title || 'Testimonios'}</h2>
+    <div class="grid">
+      ${data.testimonials.items.map((item: any) => `
+        <div class="card testimonial">
+          <p class="quote">"${item.quote}"</p>
+          <div class="author">
+            <strong>${item.author}</strong>
+            <span>${item.role}${item.company ? ' · ' + item.company : ''}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  </section>` : ''
+
+    const ctaSection = data.cta ? `
+  <section class="section cta">
+    <h2>${data.cta.title}</h2>
+    <p class="subtitle">${data.cta.subtitle}</p>
+    <a href="#" class="btn">${data.cta.button} →</a>
+  </section>` : ''
+
     return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -136,23 +197,65 @@ export default function CreatePageLovable() {
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e2e8f0; line-height: 1.6; }
     h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; }
+
     .header { position: sticky; top: 0; background: rgba(22,27,39,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 20px 40px; z-index: 100; }
-    .hero { padding: 120px 40px 80px; text-align: center; position: relative; }
+
+    .hero { padding: 120px 40px 80px; text-align: center; position: relative; overflow: hidden; }
     .hero::before { content: ''; position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 800px; height: 300px; background: radial-gradient(ellipse, rgba(59,130,246,0.15), rgba(139,92,246,0.1) 40%, transparent 70%); z-index: 0; }
-    h1 { font-size: clamp(2.5rem, 5vw, 5rem); margin-bottom: 20px; position: relative; z-index: 1; }
-    .gradient { background: linear-gradient(135deg, #3B82F6, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .btn { display: inline-block; padding: 14px 32px; background: linear-gradient(to top, #2563EB, #3B82F6); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; box-shadow: 0 10px 40px rgba(59,130,246,0.3); }
+
+    h1 { font-size: clamp(2.5rem, 5vw, 5rem); margin-bottom: 20px; position: relative; z-index: 1; line-height: 1.1; }
+    .gradient { background: linear-gradient(135deg, #3B82F6, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: 1.25rem; color: #94a3b8; margin-bottom: 40px; position: relative; z-index: 1; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+    .section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+    h2 { font-size: 2.5rem; text-align: center; margin-bottom: 60px; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .card { background: #1e2535; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 32px; transition: all 0.3s; }
+    .card:hover { transform: translateY(-4px); border-color: rgba(59,130,246,0.3); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .card h3 { font-size: 1.25rem; margin-bottom: 12px; }
+    .card p { color: #94a3b8; font-size: 0.95rem; line-height: 1.6; }
+    .icon { font-size: 2rem; margin-bottom: 16px; }
+
+    .stats { background: #161b27; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 48px; text-align: center; }
+    .stat-value { font-size: 3rem; font-weight: 900; margin-bottom: 8px; }
+    .stat-label { font-size: 1rem; color: #94a3b8; }
+
+    .testimonial .quote { font-size: 1.05rem; line-height: 1.8; margin-bottom: 20px; font-style: italic; }
+    .testimonial .author { padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); }
+    .testimonial .author strong { display: block; margin-bottom: 4px; }
+    .testimonial .author span { color: #94a3b8; font-size: 0.9rem; }
+
+    .cta { background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%); border-radius: 24px; text-align: center; }
+    .cta .subtitle { font-size: 1.25rem; color: #cbd5e1; margin-bottom: 32px; }
+
+    .btn { display: inline-block; padding: 14px 32px; background: linear-gradient(to top, #2563EB, #3B82F6); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; box-shadow: 0 10px 40px rgba(59,130,246,0.3); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-2px); }
+
+    .footer { border-top: 1px solid rgba(255,255,255,0.08); padding: 40px; text-align: center; color: #94a3b8; font-size: 0.875rem; }
   </style>
 </head>
 <body>
   <header class="header">
     <h3>${data.businessName || 'Mi Sitio'}</h3>
   </header>
+
   <section class="hero">
     <h1>${data.businessName || 'Mi Sitio'}<br><span class="gradient">${data.tagline || 'Potencia tu negocio'}</span></h1>
-    <p style="font-size: 1.25rem; color: #94a3b8; margin-bottom: 40px;">${data.hero?.subtitle || 'Diseño profesional con IA'}</p>
-    <a href="#" class="btn">Comenzar →</a>
+    <p>${data.hero?.subtitle || 'Diseño profesional con IA'}</p>
+    <a href="#" class="btn">${data.hero?.cta || 'Comenzar'} →</a>
   </section>
+
+  ${featuresSection}
+  ${servicesSection}
+  ${statsSection}
+  ${testimonialsSection}
+  ${ctaSection}
+
+  <footer class="footer">
+    <p>© ${new Date().getFullYear()} ${data.businessName || 'Mi Sitio'}. Powered by <a href="https://anvilwp.com" style="color: #3B82F6;">AnvilWP</a></p>
+  </footer>
 </body>
 </html>`
   }
