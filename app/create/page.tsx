@@ -25,11 +25,13 @@ export default function CreatePageLovable() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'Describe el tipo de web WordPress que quieres crear y yo me encargo del resto.',
+      content: '¡Pega aquí el HTML generado por Gemini, Claude o cualquier AI y lo convertiré en un theme de WordPress!',
       timestamp: new Date()
     }
   ])
   const [input, setInput] = useState('')
+  const [htmlInput, setHtmlInput] = useState('')
+  const [mode, setMode] = useState<'html' | 'text'>('html')
   const [isGenerating, setIsGenerating] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
   const [themeZipUrl, setThemeZipUrl] = useState<string | null>(null)
