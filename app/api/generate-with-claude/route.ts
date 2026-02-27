@@ -320,121 +320,507 @@ function generateCSS(data: any) {
   const accent = data.colors?.accent || '#3B82F6'
   const secondary = data.colors?.secondary || '#8B5CF6'
 
-  return `/* ${data.businessName} Theme Styles - AnvilWP */
+  return `/* ${data.businessName} - Premium Theme by AnvilWP */
+
+/* ============================================
+   DESIGN SYSTEM - Cruip/Neon Inspired Premium
+   ============================================ */
+
 :root {
+  /* Colors - Dark Neon Palette */
   --c-primary: ${primary};
   --c-accent: ${accent};
   --c-secondary: ${secondary};
-  --c-bg: #0d1117;
-  --c-surface: #161b27;
-  --c-text: #e2e8f0;
-  --c-muted: #94a3b8;
+  --c-bg-base: #0d1117;
+  --c-bg-elevated: #161b27;
+  --c-bg-subtle: #1e2535;
+  --c-border: rgba(255, 255, 255, 0.08);
+  --c-border-focus: rgba(59, 130, 246, 0.3);
+
+  /* Text Colors */
+  --c-text-primary: #e2e8f0;
+  --c-text-secondary: #94a3b8;
+  --c-text-muted: #64748b;
+
+  /* Spacing Scale - 8px base */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-2xl: 64px;
+  --space-3xl: 80px;
+
+  /* Typography Scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
+  --text-5xl: 3rem;
+
+  /* Effects */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 10px 40px rgba(59, 130, 246, 0.3);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
 }
 
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
 body {
-  background: var(--c-bg);
-  color: var(--c-text);
-  font-family: 'Inter', sans-serif;
+  background: var(--c-bg-base);
+  color: var(--c-text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
-/* Hero */
+h1 { font-size: clamp(2.5rem, 5vw, 4rem); }
+h2 { font-size: clamp(2rem, 4vw, 3rem); }
+h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
+
+p { line-height: 1.7; }
+
+a {
+  color: var(--c-accent);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--c-secondary);
+}
+
+/* ============================================
+   HERO SECTION - Premium Landing
+   ============================================ */
+
 .hero-section {
-  padding: 120px 40px 80px;
-  text-align: center;
   position: relative;
+  padding-top: clamp(80px, 15vh, 140px);
+  padding-bottom: clamp(60px, 12vh, 100px);
+  text-align: center;
   overflow: hidden;
 }
 
+/* Radial Glow Effect */
 .hero-section::before {
   content: '';
   position: absolute;
-  top: -50%;
+  top: -30%;
   left: 50%;
   transform: translateX(-50%);
-  width: 800px;
-  height: 300px;
-  background: radial-gradient(ellipse, rgba(59,130,246,0.15) 0%, rgba(139,92,246,0.1) 40%, transparent 70%);
+  width: min(1000px, 90vw);
+  height: 400px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(59, 130, 246, 0.18) 0%,
+    rgba(139, 92, 246, 0.12) 35%,
+    rgba(244, 114, 182, 0.08) 60%,
+    transparent 80%
+  );
   z-index: 0;
   pointer-events: none;
+  animation: pulse 8s ease-in-out infinite;
 }
 
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+  50% { opacity: 0.8; transform: translateX(-50%) scale(1.05); }
+}
+
+.hero-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section .badge {
+  display: inline-block;
+  padding: 8px 20px;
+  background: var(--c-bg-elevated);
+  border: 1px solid var(--c-border);
+  border-radius: 50px;
+  font-size: var(--text-sm);
+  color: var(--c-text-secondary);
+  margin-bottom: var(--space-md);
+  transition: all var(--transition-base);
+}
+
+.hero-section .badge:hover {
+  border-color: var(--c-border-focus);
+  background: var(--c-bg-subtle);
+}
+
+/* Gradient Text Effect */
 .gradient-text {
+  background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+.hero-section .subtitle {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  color: var(--c-text-secondary);
+  max-width: 700px;
+  margin: 0 auto var(--space-xl);
+  line-height: 1.6;
+}
+
+/* ============================================
+   BUTTONS - Premium CTAs
+   ============================================ */
+
+.wp-block-button__link,
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: linear-gradient(to bottom, var(--c-accent), color-mix(in srgb, var(--c-accent) 85%, black));
+  color: white !important;
+  font-weight: 600;
+  font-size: var(--text-base);
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-glow);
+}
+
+.wp-block-button__link:hover,
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 50px rgba(59, 130, 246, 0.4);
+}
+
+.btn-secondary {
+  background: var(--c-bg-elevated);
+  border: 1px solid var(--c-border);
+  color: var(--c-text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+  border-color: var(--c-border-focus);
+  background: var(--c-bg-subtle);
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   CARDS - Elevated Surfaces
+   ============================================ */
+
+.card,
+.feature-card,
+.service-card,
+.testimonial-card {
+  background: var(--c-bg-elevated);
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  padding: var(--space-lg);
+  transition: all var(--transition-slow);
+}
+
+.card:hover,
+.feature-card:hover,
+.service-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--c-border-focus);
+  box-shadow: var(--shadow-lg);
+  background: var(--c-bg-subtle);
+}
+
+.card .icon,
+.feature-card .icon,
+.service-card .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  font-size: 2rem;
+  margin-bottom: var(--space-md);
+  background: radial-gradient(circle at 30% 30%,
+    rgba(59, 130, 246, 0.15),
+    rgba(139, 92, 246, 0.08)
+  );
+  border-radius: 50%;
+  border: 1px solid var(--c-border);
+}
+
+.card h3,
+.feature-card h3,
+.service-card h3 {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-sm);
+  color: var(--c-text-primary);
+}
+
+.card p,
+.feature-card p,
+.service-card p {
+  color: var(--c-text-secondary);
+  font-size: var(--text-base);
+  line-height: 1.7;
+}
+
+/* ============================================
+   SECTIONS - Layout & Spacing
+   ============================================ */
+
+.section-padding {
+  padding-top: var(--space-3xl);
+  padding-bottom: var(--space-3xl);
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  text-align: center;
+  margin-bottom: var(--space-xl);
+  font-weight: 800;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: var(--text-xl);
+  color: var(--c-text-secondary);
+  max-width: 600px;
+  margin: 0 auto var(--space-2xl);
+}
+
+/* ============================================
+   GRID LAYOUTS
+   ============================================ */
+
+.features-grid,
+.services-grid,
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+  .features-grid,
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .features-grid,
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ============================================
+   STATS SECTION - Bold Numbers
+   ============================================ */
+
+.stats-section {
+  background: var(--c-bg-elevated);
+  border-top: 1px solid var(--c-border);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-2xl);
+  text-align: center;
+}
+
+.stat-item {
+  padding: var(--space-md);
+}
+
+.stat-value {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: var(--space-xs);
   background: linear-gradient(135deg, var(--c-accent), var(--c-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Cards */
-.card {
-  background: var(--c-surface);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
-  padding: 32px;
-  transition: all 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(59,130,246,0.3);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-}
-
-/* Sections */
-.section-padding {
-  padding: 80px 0;
-}
-
-/* Stats */
-.stat-value {
-  font-size: clamp(2.5rem, 4vw, 3.5rem);
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--c-accent), var(--c-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-
 .stat-label {
-  color: var(--c-muted);
-  font-size: 0.875rem;
+  color: var(--c-text-secondary);
+  font-size: var(--text-sm);
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
 }
 
-/* Testimonials */
+/* ============================================
+   TESTIMONIALS
+   ============================================ */
+
 .testimonial-card {
-  background: var(--c-surface);
-  border-radius: 12px;
-  padding: 24px;
+  padding: var(--space-lg);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
 }
 
-/* CTA */
+.testimonial-quote {
+  font-size: var(--text-lg);
+  line-height: 1.7;
+  font-style: italic;
+  color: var(--c-text-primary);
+  flex: 1;
+}
+
+.testimonial-author {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--c-border);
+}
+
+.testimonial-author-name {
+  font-weight: 600;
+  color: var(--c-text-primary);
+}
+
+.testimonial-author-role {
+  font-size: var(--text-sm);
+  color: var(--c-text-secondary);
+}
+
+/* ============================================
+   CTA SECTION - Gradient Background
+   ============================================ */
+
 .cta-section {
-  background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-secondary) 100%);
-  border-radius: 12px;
-  padding: 60px 40px;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--c-accent) 20%, var(--c-bg-base)),
+    color-mix(in srgb, var(--c-secondary) 20%, var(--c-bg-base))
+  );
+  border: 1px solid var(--c-border);
+  border-radius: 24px;
+  padding: var(--space-2xl) var(--space-xl);
   text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Responsive */
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.15), transparent 70%);
+  pointer-events: none;
+}
+
+.cta-section::after {
+  content: '';
+  position: absolute;
+  bottom: -50%;
+  left: -20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+.cta-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: var(--space-md);
+}
+
+.cta-subtitle {
+  font-size: var(--text-xl);
+  color: var(--c-text-secondary);
+  margin-bottom: var(--space-xl);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
 @media (max-width: 900px) {
-  .hero-section { padding: 80px 24px 60px; }
-  .section-padding { padding: 60px 0; }
+  :root {
+    --space-3xl: 60px;
+    --space-2xl: 48px;
+  }
+
+  .hero-section {
+    padding-top: 80px;
+    padding-bottom: 60px;
+  }
+
+  .card,
+  .feature-card,
+  .service-card {
+    padding: var(--space-md);
+  }
 }
 
 @media (max-width: 600px) {
-  .hero-section { padding: 60px 20px 40px; }
-  .section-padding { padding: 40px 0; }
-  .card { padding: 24px; }
-}`
+  :root {
+    --space-3xl: 40px;
+    --space-2xl: 32px;
+  }
+
+  .hero-section {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+
+  .stats-grid {
+    gap: var(--space-xl);
+  }
+
+  .cta-section {
+    padding: var(--space-xl) var(--space-md);
+  }
+}
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+
+.text-center { text-align: center; }
+.text-gradient { composes: gradient-text; }
+.mb-0 { margin-bottom: 0; }
+.mt-0 { margin-top: 0; }`
 }
 
 function generateHeroPattern(themeSlug: string, data: any) {
