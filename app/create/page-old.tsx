@@ -63,7 +63,6 @@ export default function CreatePage() {
   const [isComplete, setIsComplete] = useState(false)
   const [themeZipUrl, setThemeZipUrl] = useState<string | null>(null)
   const [previewHtml, setPreviewHtml] = useState('')
-  const [showInput, setShowInput] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -72,35 +71,25 @@ export default function CreatePage() {
 
   useEffect(() => {
     if (currentStep === 0 && messages.length === 1) {
-      const timer = setTimeout(() => showNextQuestion(), 500)
-      return () => clearTimeout(timer)
+      setTimeout(() => showNextQuestion(), 300)
     }
-  }, [])
+  }, [currentStep, messages.length])
 
   const showNextQuestion = () => {
     if (currentStep >= steps.length) {
-      generateTheme()
+      setTimeout(() => generateTheme(), 500)
       return
     }
 
     const step = steps[currentStep]
     if (!step) return
 
-    setMessages(prev => {
-      const lastMsg = prev[prev.length - 1]
-      if (lastMsg?.content === step.question) return prev
-      return [...prev, {
-        role: 'assistant',
-        content: step.question,
-        options: step.options,
-      }]
-    })
-
-    if (step.type === 'text') {
-      setTimeout(() => setShowInput(true), 100)
-    } else {
-      setShowInput(false)
+    const newMessage: Message = {
+      role: 'assistant',
+      content: step.question,
+      options: step.options,
     }
+    setMessages(prev => [...prev, newMessage])
   }
 
   const handleAnswer = (answer: string | string[]) => {
@@ -110,15 +99,17 @@ export default function CreatePage() {
     const answerText = Array.isArray(answer) ? answer.join(', ') : answer
     if (!answerText && !step.optional) return
 
-    setShowInput(false)
+    // Add user message
     setMessages(prev => [...prev, { role: 'user', content: answerText || 'Saltar' }])
 
+    // Update form data
     const newFormData = {
       ...formData,
       [step.id]: answer,
     }
     setFormData(newFormData)
 
+    // Move to next step after a delay
     setTimeout(() => {
       const nextStep = currentStep + 1
       setCurrentStep(nextStep)
@@ -133,18 +124,22 @@ export default function CreatePage() {
 
   const generateTheme = async () => {
     setIsGenerating(true)
-    setShowInput(false)
-    setMessages(prev => [...prev, { role: 'assistant', content: '¡Perfecto! Generando tu theme...' }])
+    setMessages(prev => [
+      ...prev,
+      { role: 'assistant', content: '¡Perfecto! Generando tu theme...' },
+    ])
 
     try {
       const previewHtmlContent = generatePreviewHTML(formData)
       setPreviewHtml(previewHtmlContent)
 
-      setMessages(prev => [...prev, { role: 'assistant', content: '✨ Creando estructura...' }])
+      setMessages(prev => [...prev, { role: 'assistant', content: '✨ Creando estructura del theme...' }])
       await new Promise(resolve => setTimeout(resolve, 1000))
 
-      setMessages(prev => [...prev, { role: 'assistant', content: '🎨 Aplicando diseño...' }])
+      setMessages(prev => [...prev, { role: 'assistant', content: '🎨 Aplicando diseño profesional...' }])
       await new Promise(resolve => setTimeout(resolve, 1000))
+
+      setMessages(prev => [...prev, { role: 'assistant', content: '📝 Generando contenido específico...' }])
 
       const response = await fetch('/api/generate', {
         method: 'POST',
@@ -156,7 +151,7 @@ export default function CreatePage() {
 
       const result = await response.json()
 
-      setMessages(prev => [...prev, { role: 'assistant', content: '📦 Empaquetando...' }])
+      setMessages(prev => [...prev, { role: 'assistant', content: '📦 Empaquetando archivos...' }])
 
       const JSZip = (await import('jszip')).default
       const zip = new JSZip()
@@ -169,7 +164,10 @@ export default function CreatePage() {
       const url = URL.createObjectURL(blob)
       setThemeZipUrl(url)
 
-      setMessages(prev => [...prev, { role: 'assistant', content: `🎉 ¡Listo! Theme "${result.themeName}" generado.` }])
+      setMessages(prev => [
+        ...prev,
+        { role: 'assistant', content: `🎉 ¡Tu theme "${result.themeName}" está listo! Puedes verlo en el preview y descargarlo.` },
+      ])
 
       setIsComplete(true)
     } catch (error) {
@@ -320,37 +318,19 @@ export default function CreatePage() {
                 </div>
               </div>
             ))}
-
-            {showInput && !isGenerating && !isComplete && (
+            {!isGenerating && !isComplete && currentStep < steps.length && steps[currentStep]?.type === 'text' && (
               <div className="flex justify-start">
                 <div className="max-w-[80%] w-full">
-                  <input
-                    type="text"
-                    placeholder={steps[currentStep]?.placeholder || 'Escribe aquí...'}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        const value = e.currentTarget.value.trim()
-                        if (value || steps[currentStep]?.optional) {
-                          handleAnswer(value)
-                          e.currentTarget.value = ''
-                        }
-                      }
-                    }}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-2xl text-sm focus:border-blue-500 focus:outline-none text-white placeholder-gray-500"
-                    autoFocus
-                  />
-                  {steps[currentStep]?.optional && (
-                    <button
-                      onClick={() => handleAnswer('')}
-                      className="mt-2 text-xs text-gray-400 hover:text-gray-300 underline cursor-pointer"
-                    >
-                      Saltar este paso →
-                    </button>
-                  )}
+                  <input type="text" placeholder={steps[currentStep].placeholder || 'Escribe...'} onKeyDown={(e) => {
+                    if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                      handleAnswer(e.currentTarget.value.trim())
+                      e.currentTarget.value = ''
+                    }
+                  }} className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-2xl text-sm focus:border-blue-500 focus:outline-none" autoFocus />
+                  {steps[currentStep].optional && <button onClick={() => handleAnswer('')} className="mt-2 text-xs text-gray-400">Saltar →</button>}
                 </div>
               </div>
             )}
-
             {isGenerating && (
               <div className="flex justify-start">
                 <div className="bg-gray-800 rounded-2xl px-4 py-3">
@@ -361,7 +341,6 @@ export default function CreatePage() {
                 </div>
               </div>
             )}
-
             <div ref={chatEndRef} />
           </div>
           {isComplete && themeZipUrl && (
