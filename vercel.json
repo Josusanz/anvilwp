@@ -1,6 +1,8 @@
 {
-  "buildCommand": "cd landing-page && npm install && npm run build",
-  "outputDirectory": "landing-page/out",
   "framework": "nextjs",
-  "regions": ["iad1"]
+  "buildCommand": "npm run build",
+  "outputDirectory": "out",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "rootDirectory": "landing-page"
 }
