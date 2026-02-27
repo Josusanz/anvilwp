@@ -826,7 +826,7 @@ a:hover {
 function generateHeroPattern(themeSlug: string, data: any) {
   return `<?php
 /**
- * Title: Hero Principal
+ * Title: Hero Principal - Premium Cruip Style
  * Slug: ${themeSlug}/hero
  * Categories: ${themeSlug}
  */
@@ -836,22 +836,26 @@ function generateHeroPattern(themeSlug: string, data: any) {
 <!-- wp:group {"layout":{"type":"constrained","contentSize":"800px"}} -->
 <div class="wp-block-group is-layout-constrained wp-block-group-is-layout-constrained">
 
-${data.hero?.badge ? `<!-- wp:paragraph {"align":"center"} -->
-<p class="has-text-align-center" style="display:inline-block;padding:8px 16px;background:var(--c-surface);border:1px solid rgba(255,255,255,0.1);border-radius:50px;font-size:0.875rem">✨ ${data.hero.badge}</p>
+${data.hero?.badge ? `<!-- wp:paragraph {"align":"center","className":"badge"} -->
+<p class="has-text-align-center badge">${data.hero.badge}</p>
 <!-- /wp:paragraph -->
 
-` : ''}<!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2.5rem,5vw,5rem)"}}} -->
-<h1 class="wp-block-heading has-text-align-center" style="font-size:clamp(2.5rem,5vw,5rem)">${data.hero?.title || data.businessName}<br><span class="gradient-text">${data.tagline}</span></h1>
+` : ''}<!-- wp:heading {"textAlign":"center","level":1} -->
+<h1 class="wp-block-heading has-text-align-center">${data.hero?.title || data.businessName}<br><span class="gradient-text">${data.tagline}</span></h1>
 <!-- /wp:heading -->
 
-<!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"1.25rem"}}} -->
-<p class="has-text-align-center" style="font-size:1.25rem;color:var(--c-muted)">${data.hero?.subtitle || ''}</p>
+<!-- wp:paragraph {"align":"center","className":"subtitle"} -->
+<p class="has-text-align-center subtitle">${data.hero?.subtitle || ''}</p>
 <!-- /wp:paragraph -->
 
-<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
+<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"blockGap":"16px"}}} -->
 <div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex">
-<!-- wp:button {"backgroundColor":"accent"} -->
-<div class="wp-block-button"><a class="wp-block-button__link has-accent-background-color has-background wp-element-button">${data.hero?.cta || 'Comenzar'} →</a></div>
+<!-- wp:button {"className":"btn-primary"} -->
+<div class="wp-block-button"><a class="wp-block-button__link btn-primary wp-element-button">${data.hero?.cta || 'Comenzar'} →</a></div>
+<!-- /wp:button -->
+
+<!-- wp:button {"className":"btn-secondary"} -->
+<div class="wp-block-button"><a class="wp-block-button__link btn-secondary wp-element-button">Saber más</a></div>
 <!-- /wp:button -->
 </div>
 <!-- /wp:buttons -->
@@ -867,7 +871,7 @@ function generateFeaturesPattern(themeSlug: string, features: any) {
 
   return `<?php
 /**
- * Title: Features
+ * Title: Features - Premium Grid
  * Slug: ${themeSlug}/features
  * Categories: ${themeSlug}
  */
@@ -875,27 +879,27 @@ function generateFeaturesPattern(themeSlug: string, features: any) {
 <!-- wp:group {"align":"full","className":"section-padding","layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull section-padding has-global-padding is-layout-constrained wp-block-group-is-layout-constrained">
 
-<!-- wp:heading {"textAlign":"center","style":{"spacing":{"margin":{"bottom":"60px"}}}} -->
-<h2 class="wp-block-heading has-text-align-center" style="margin-bottom:60px">${features.title}</h2>
+<!-- wp:heading {"textAlign":"center","className":"section-title"} -->
+<h2 class="wp-block-heading has-text-align-center section-title">${features.title}</h2>
 <!-- /wp:heading -->
 
-<!-- wp:columns -->
-<div class="wp-block-columns is-layout-flex wp-block-columns-is-layout-flex">
+<!-- wp:columns {"className":"features-grid"} -->
+<div class="wp-block-columns features-grid is-layout-flex wp-block-columns-is-layout-flex">
 ${items.map((item: any) => `
 <!-- wp:column -->
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<!-- wp:group {"className":"card","layout":{"type":"constrained"}} -->
-<div class="wp-block-group card is-layout-constrained wp-block-group-is-layout-constrained" style="text-align:center">
-<!-- wp:paragraph {"style":{"typography":{"fontSize":"3rem"}}} -->
-<p style="font-size:3rem;line-height:1;margin-bottom:16px">${item.icon}</p>
-<!-- /wp:paragraph -->
+<!-- wp:group {"className":"feature-card","layout":{"type":"constrained"}} -->
+<div class="wp-block-group feature-card is-layout-constrained wp-block-group-is-layout-constrained">
+<!-- wp:html -->
+<div class="icon">${item.icon}</div>
+<!-- /wp:html -->
 
-<!-- wp:heading {"level":3,"fontSize":"x-large"} -->
-<h3 class="wp-block-heading has-x-large-font-size">${item.title}</h3>
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">${item.title}</h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p style="color:var(--c-muted)">${item.description}</p>
+<p>${item.description}</p>
 <!-- /wp:paragraph -->
 </div>
 <!-- /wp:group -->
@@ -914,35 +918,35 @@ function generateServicesPattern(themeSlug: string, services: any) {
 
   return `<?php
 /**
- * Title: Services
+ * Title: Services - Premium Cards
  * Slug: ${themeSlug}/services
  * Categories: ${themeSlug}
  */
 ?>
-<!-- wp:group {"align":"full","className":"section-padding","backgroundColor":"surface","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull section-padding has-surface-background-color has-background has-global-padding is-layout-constrained wp-block-group-is-layout-constrained">
+<!-- wp:group {"align":"full","className":"section-padding","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull section-padding has-global-padding is-layout-constrained wp-block-group-is-layout-constrained">
 
-<!-- wp:heading {"textAlign":"center","style":{"spacing":{"margin":{"bottom":"60px"}}}} -->
-<h2 class="wp-block-heading has-text-align-center" style="margin-bottom:60px">${services.title}</h2>
+<!-- wp:heading {"textAlign":"center","className":"section-title"} -->
+<h2 class="wp-block-heading has-text-align-center section-title">${services.title}</h2>
 <!-- /wp:heading -->
 
-<!-- wp:columns {"className":"is-style-default"} -->
-<div class="wp-block-columns is-style-default is-layout-flex wp-block-columns-is-layout-flex">
+<!-- wp:columns {"className":"services-grid"} -->
+<div class="wp-block-columns services-grid is-layout-flex wp-block-columns-is-layout-flex">
 ${items.map((item: any) => `
 <!-- wp:column -->
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<!-- wp:group {"className":"card","layout":{"type":"constrained"}} -->
-<div class="wp-block-group card is-layout-constrained wp-block-group-is-layout-constrained">
-<!-- wp:paragraph {"style":{"typography":{"fontSize":"3rem"}}} -->
-<p style="font-size:3rem;line-height:1;margin-bottom:16px">${item.icon}</p>
-<!-- /wp:paragraph -->
+<!-- wp:group {"className":"service-card","layout":{"type":"constrained"}} -->
+<div class="wp-block-group service-card is-layout-constrained wp-block-group-is-layout-constrained">
+<!-- wp:html -->
+<div class="icon">${item.icon}</div>
+<!-- /wp:html -->
 
 <!-- wp:heading {"level":3} -->
 <h3 class="wp-block-heading">${item.title}</h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p style="color:var(--c-muted)">${item.description}</p>
+<p>${item.description}</p>
 <!-- /wp:paragraph -->
 </div>
 <!-- /wp:group -->
@@ -959,31 +963,24 @@ ${items.map((item: any) => `
 function generateStatsPattern(themeSlug: string, stats: any[]) {
   return `<?php
 /**
- * Title: Stats
+ * Title: Stats - Key Metrics
  * Slug: ${themeSlug}/stats
  * Categories: ${themeSlug}
  */
 ?>
-<!-- wp:group {"align":"full","className":"section-padding","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull section-padding has-global-padding is-layout-constrained wp-block-group-is-layout-constrained">
+<!-- wp:group {"align":"full","className":"section-padding stats-section","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull section-padding stats-section has-global-padding is-layout-constrained wp-block-group-is-layout-constrained">
 
-<!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-around"}} -->
-<div class="wp-block-group is-layout-flex wp-block-group-is-layout-flex" style="gap:48px">
+<!-- wp:html -->
+<div class="stats-grid">
 ${stats.map(stat => `
-<!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"padding":{"top":"0","bottom":"0"}}}} -->
-<div class="wp-block-group is-layout-constrained wp-block-group-is-layout-constrained" style="padding-top:0;padding-bottom:0;text-align:center">
-<!-- wp:paragraph {"className":"stat-value"} -->
-<p class="stat-value">${stat.value}</p>
-<!-- /wp:paragraph -->
-
-<!-- wp:paragraph {"className":"stat-label"} -->
-<p class="stat-label">${stat.label}</p>
-<!-- /wp:paragraph -->
-</div>
-<!-- /wp:group -->
+  <div class="stat-item">
+    <div class="stat-value">${stat.value}</div>
+    <div class="stat-label">${stat.label}</div>
+  </div>
 `).join('')}
 </div>
-<!-- /wp:group -->
+<!-- /wp:html -->
 
 </div>
 <!-- /wp:group -->`
@@ -994,7 +991,7 @@ function generateTestimonialsPattern(themeSlug: string, testimonials: any) {
 
   return `<?php
 /**
- * Title: Testimonials
+ * Title: Testimonials - Client Reviews
  * Slug: ${themeSlug}/testimonials
  * Categories: ${themeSlug}
  */
@@ -1002,24 +999,27 @@ function generateTestimonialsPattern(themeSlug: string, testimonials: any) {
 <!-- wp:group {"align":"full","className":"section-padding","layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull section-padding has-global-padding is-layout-constrained wp-block-group-is-layout-constrained">
 
-<!-- wp:heading {"textAlign":"center","style":{"spacing":{"margin":{"bottom":"60px"}}}} -->
-<h2 class="wp-block-heading has-text-align-center" style="margin-bottom:60px">${testimonials.title}</h2>
+<!-- wp:heading {"textAlign":"center","className":"section-title"} -->
+<h2 class="wp-block-heading has-text-align-center section-title">${testimonials.title}</h2>
 <!-- /wp:heading -->
 
-<!-- wp:columns -->
-<div class="wp-block-columns is-layout-flex wp-block-columns-is-layout-flex">
+<!-- wp:columns {"className":"testimonials-grid"} -->
+<div class="wp-block-columns testimonials-grid is-layout-flex wp-block-columns-is-layout-flex">
 ${items.map((item: any) => `
 <!-- wp:column -->
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
 <!-- wp:group {"className":"testimonial-card","layout":{"type":"constrained"}} -->
 <div class="wp-block-group testimonial-card is-layout-constrained wp-block-group-is-layout-constrained">
-<!-- wp:paragraph -->
-<p style="color:var(--c-muted);margin-bottom:16px">"${item.quote}"</p>
+<!-- wp:paragraph {"className":"testimonial-quote"} -->
+<p class="testimonial-quote">"${item.quote}"</p>
 <!-- /wp:paragraph -->
 
-<!-- wp:paragraph -->
-<p><strong>${item.author}</strong><br><span style="color:var(--c-muted);font-size:0.875rem">${item.role}${item.company ? ` - ${item.company}` : ''}</span></p>
-<!-- /wp:paragraph -->
+<!-- wp:html -->
+<div class="testimonial-author">
+  <div class="testimonial-author-name">${item.author}</div>
+  <div class="testimonial-author-role">${item.role}${item.company ? ` · ${item.company}` : ''}</div>
+</div>
+<!-- /wp:html -->
 </div>
 <!-- /wp:group -->
 </div>
@@ -1035,7 +1035,7 @@ ${items.map((item: any) => `
 function generateCTAPattern(themeSlug: string, cta: any) {
   return `<?php
 /**
- * Title: Call to Action
+ * Title: Call to Action - Premium Gradient
  * Slug: ${themeSlug}/cta
  * Categories: ${themeSlug}
  */
@@ -1045,18 +1045,18 @@ function generateCTAPattern(themeSlug: string, cta: any) {
 
 <!-- wp:group {"className":"cta-section","layout":{"type":"constrained","contentSize":"800px"}} -->
 <div class="wp-block-group cta-section is-layout-constrained wp-block-group-is-layout-constrained">
-<!-- wp:heading {"textAlign":"center","style":{"color":{"text":"#ffffff"}}} -->
-<h2 class="wp-block-heading has-text-align-center" style="color:#ffffff">${cta.title}</h2>
+<!-- wp:heading {"textAlign":"center","className":"cta-title"} -->
+<h2 class="wp-block-heading has-text-align-center cta-title">${cta.title}</h2>
 <!-- /wp:heading -->
 
-<!-- wp:paragraph {"align":"center","style":{"color":{"text":"rgba(255,255,255,0.9)"},"typography":{"fontSize":"1.125rem"}}} -->
-<p class="has-text-align-center" style="color:rgba(255,255,255,0.9);font-size:1.125rem">${cta.subtitle}</p>
+<!-- wp:paragraph {"align":"center","className":"cta-subtitle"} -->
+<p class="has-text-align-center cta-subtitle">${cta.subtitle}</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
 <div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex">
-<!-- wp:button {"style":{"color":{"background":"#ffffff","text":"var(--c-accent)"}}} -->
-<div class="wp-block-button"><a class="wp-block-button__link has-background has-text-color wp-element-button" style="background-color:#ffffff;color:var(--c-accent)">${cta.button} →</a></div>
+<!-- wp:button {"className":"btn-primary"} -->
+<div class="wp-block-button"><a class="wp-block-button__link btn-primary wp-element-button">${cta.button} →</a></div>
 <!-- /wp:button -->
 </div>
 <!-- /wp:buttons -->
