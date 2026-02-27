@@ -666,8 +666,13 @@ Documentación completa: https://github.com/Josusanz/anvilwp`
 }
 
 function generateRealHero(data: any, content: any) {
-  const { themeSlug, primaryCta } = data
+  const { themeSlug, primaryCta, businessName, tagline } = data
   const { hero } = content
+
+  const finalTitle = businessName || hero.title
+  const finalSubtitle = tagline || hero.subtitle
+  const finalCta = primaryCta || hero.cta
+
   return `<?php
 /**
  * Title: Hero Section
@@ -686,21 +691,21 @@ function generateRealHero(data: any, content: any) {
     <!-- /wp:paragraph -->
 
     <!-- wp:heading {"textAlign":"center","level":1,"fontSize":"x-large"} -->
-    <h1 class="wp-block-heading has-text-align-center has-x-large-font-size">${hero.title}</h1>
+    <h1 class="wp-block-heading has-text-align-center has-x-large-font-size">${finalTitle}</h1>
     <!-- /wp:heading -->
 
     <!-- wp:paragraph {"align":"center","fontSize":"large"} -->
-    <p class="has-text-align-center has-large-font-size" style="color:#94a3b8;margin-bottom:40px">${hero.subtitle}</p>
+    <p class="has-text-align-center has-large-font-size" style="color:#94a3b8;margin-bottom:40px">${finalSubtitle}</p>
     <!-- /wp:paragraph -->
 
     <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
     <div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex">
       <!-- wp:button {"className":"btn-primary"} -->
-      <div class="wp-block-button btn-primary"><a class="wp-block-button__link wp-element-button">${primaryCta || hero.cta}</a></div>
+      <div class="wp-block-button btn-primary"><a class="wp-block-button__link wp-element-button">${finalCta}</a></div>
       <!-- /wp:button -->
 
       <!-- wp:button {"className":"btn-secondary"} -->
-      <div class="wp-block-button btn-secondary"><a class="wp-block-button__link wp-element-button">Saber Más</a></div>
+      <div class="wp-block-button btn-secondary"><a class="wp-block-button__link wp-element-button">Más Info</a></div>
       <!-- /wp:button -->
     </div>
     <!-- /wp:buttons -->
