@@ -161,5 +161,3 @@ Respond ONLY with the JSON, no explanations.`
 
   return JSON.parse(jsonMatch[0])
 }
-
-export default POST
