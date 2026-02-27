@@ -26,71 +26,87 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // IMPROVED: Better prompt with more sections
+    // IMPROVED: Better prompt with explicit structure
     let message
     try {
       message = await anthropic.messages.create({
         model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 8192, // Increased for more content
+        max_tokens: 8192,
         messages: [{
           role: 'user',
-          content: `Eres un experto diseñador web y copywriter. El usuario quiere crear una web WordPress y te dice: "${userMessage}"
+          content: `ERES UN EXPERTO EN CREAR WEBSITES PREMIUM COMPLETOS.
 
-Genera un objeto JSON con la siguiente estructura (sin markdown, solo JSON puro):
+Usuario solicita: "${userMessage}"
 
+GENERA UN JSON COMPLETO CON **TODAS** LAS SECCIONES. Usa este template exacto y completa CADA campo:
+
+\`\`\`json
 {
-  "businessName": "Nombre del negocio",
-  "businessType": "Restaurante|Agencia|eCommerce|Blog|SaaS|Portfolio",
-  "tagline": "Tagline pegadizo",
-  "description": "Meta description SEO (160 caracteres)",
+  "businessName": "Nombre extraído o sugerido",
+  "businessType": "tipo relevante",
+  "tagline": "Frase memorable",
+  "description": "Meta description 160 chars",
   "hero": {
-    "title": "Título principal",
-    "subtitle": "Subtítulo descriptivo",
-    "cta": "Texto del botón",
-    "badge": "Badge opcional"
+    "badge": "✨ Badge llamativo",
+    "title": "Título impactante",
+    "subtitle": "Subtítulo que vende",
+    "cta": "Botón acción"
   },
   "features": {
     "title": "Por qué elegirnos",
     "items": [
-      {"icon": "🚀", "title": "Característica", "description": "Descripción"}
+      {"icon": "🚀", "title": "Feature 1", "description": "Beneficio específico y convincente"},
+      {"icon": "⚡", "title": "Feature 2", "description": "Beneficio específico y convincente"},
+      {"icon": "💎", "title": "Feature 3", "description": "Beneficio específico y convincente"},
+      {"icon": "🎯", "title": "Feature 4", "description": "Beneficio específico y convincente"}
     ]
   },
   "services": {
     "title": "Nuestros servicios",
     "items": [
-      {"icon": "💎", "title": "Servicio", "description": "Descripción"}
+      {"icon": "🔥", "title": "Servicio Premium 1", "description": "Descripción detallada del servicio"},
+      {"icon": "✨", "title": "Servicio Premium 2", "description": "Descripción detallada del servicio"},
+      {"icon": "💼", "title": "Servicio Premium 3", "description": "Descripción detallada del servicio"},
+      {"icon": "🎨", "title": "Servicio Premium 4", "description": "Descripción detallada del servicio"}
     ]
   },
   "stats": [
-    {"value": "500+", "label": "Clientes"},
-    {"value": "98%", "label": "Satisfacción"},
+    {"value": "500+", "label": "Clientes satisfechos"},
+    {"value": "98%", "label": "Tasa de éxito"},
     {"value": "15 años", "label": "Experiencia"}
   ],
   "testimonials": {
-    "title": "Testimonios",
+    "title": "Lo que dicen nuestros clientes",
     "items": [
-      {"quote": "Excelente servicio", "author": "Juan García", "role": "CEO", "company": "Tech Inc"}
+      {"quote": "Testimonio convincente y específico sobre resultados reales", "author": "Nombre Apellido", "role": "CEO", "company": "Empresa Real"},
+      {"quote": "Otro testimonio detallado sobre experiencia positiva", "author": "Nombre Apellido", "role": "Director", "company": "Otra Empresa"},
+      {"quote": "Testimonio sobre transformación lograda", "author": "Nombre Apellido", "role": "Fundador", "company": "Startup XYZ"},
+      {"quote": "Testimonio sobre calidad del servicio", "author": "Nombre Apellido", "role": "Manager", "company": "Corp ABC"}
     ]
   },
   "cta": {
-    "title": "¿Listo para comenzar?",
-    "subtitle": "Contáctanos hoy",
-    "button": "Contactar"
+    "title": "¿Listo para transformar tu negocio?",
+    "subtitle": "Contáctanos hoy y descubre cómo podemos ayudarte",
+    "button": "Comenzar ahora"
   },
   "colors": {
-    "primary": "#hexcolor",
+    "primary": "#0A1E3D",
     "accent": "#3B82F6",
     "secondary": "#8B5CF6"
   }
 }
+\`\`\`
 
-IMPORTANTE:
-- Mínimo 3 features, máximo 6
-- Mínimo 3 services, máximo 6
-- Siempre 3 stats relevantes
-- Mínimo 3 testimonials, máximo 6
-- Contenido REAL y específico al tipo de negocio
-- Responde SOLO con el JSON, sin explicaciones`
+REGLAS OBLIGATORIAS:
+✓ DEBES incluir MÍNIMO 4 features (usa emojis relevantes)
+✓ DEBES incluir MÍNIMO 4 services (contenido específico)
+✓ DEBES incluir EXACTAMENTE 3 stats relevantes
+✓ DEBES incluir MÍNIMO 4 testimonials creíbles
+✓ DEBES incluir sección CTA completa
+✓ Contenido en español, profesional, específico al negocio
+✓ NO uses placeholder text, genera contenido REAL
+
+RESPONDE SOLO CON EL JSON (sin \`\`\`json, sin markdown, solo el objeto)`
         }],
       })
     } catch (apiError) {
@@ -115,6 +131,17 @@ IMPORTANTE:
     let themeData
     try {
       themeData = JSON.parse(jsonMatch[0])
+
+      // CRITICAL DEBUG: Log what we got
+      console.log('=== THEME DATA GENERATED ===')
+      console.log('Business Name:', themeData.businessName)
+      console.log('Has features?', !!themeData.features?.items?.length, 'Count:', themeData.features?.items?.length || 0)
+      console.log('Has services?', !!themeData.services?.items?.length, 'Count:', themeData.services?.items?.length || 0)
+      console.log('Has stats?', !!themeData.stats?.length, 'Count:', themeData.stats?.length || 0)
+      console.log('Has testimonials?', !!themeData.testimonials?.items?.length, 'Count:', themeData.testimonials?.items?.length || 0)
+      console.log('Has CTA?', !!themeData.cta)
+      console.log('Full data:', JSON.stringify(themeData, null, 2))
+
     } catch (parseError) {
       console.error('JSON parse error:', parseError)
       console.error('Attempted to parse:', jsonMatch[0].substring(0, 500))
@@ -233,26 +260,43 @@ add_action('init', function() {
   files['assets/css/theme.css'] = generateCSS(data)
 
   // ALL PATTERNS
+  console.log('=== GENERATING PATTERNS ===')
   files['patterns/hero.php'] = generateHeroPattern(themeSlug, data)
+  console.log('✓ Hero pattern created')
 
   if (data.features?.items?.length) {
+    console.log(`✓ Creating features pattern with ${data.features.items.length} items`)
     files['patterns/features.php'] = generateFeaturesPattern(themeSlug, data.features)
+  } else {
+    console.log('✗ NO features data, skipping pattern')
   }
 
   if (data.services?.items?.length) {
+    console.log(`✓ Creating services pattern with ${data.services.items.length} items`)
     files['patterns/services.php'] = generateServicesPattern(themeSlug, data.services)
+  } else {
+    console.log('✗ NO services data, skipping pattern')
   }
 
   if (data.stats?.length) {
+    console.log(`✓ Creating stats pattern with ${data.stats.length} items`)
     files['patterns/stats.php'] = generateStatsPattern(themeSlug, data.stats)
+  } else {
+    console.log('✗ NO stats data, skipping pattern')
   }
 
   if (data.testimonials?.items?.length) {
+    console.log(`✓ Creating testimonials pattern with ${data.testimonials.items.length} items`)
     files['patterns/testimonials.php'] = generateTestimonialsPattern(themeSlug, data.testimonials)
+  } else {
+    console.log('✗ NO testimonials data, skipping pattern')
   }
 
   if (data.cta) {
+    console.log('✓ Creating CTA pattern')
     files['patterns/cta.php'] = generateCTAPattern(themeSlug, data.cta)
+  } else {
+    console.log('✗ NO CTA data, skipping pattern')
   }
 
   // Template parts
