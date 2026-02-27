@@ -71,17 +71,19 @@ export default function CreatePage() {
 
   useEffect(() => {
     if (currentStep === 0 && messages.length === 1) {
-      showNextQuestion()
+      setTimeout(() => showNextQuestion(), 300)
     }
-  }, [])
+  }, [currentStep, messages.length])
 
   const showNextQuestion = () => {
     if (currentStep >= steps.length) {
-      generateTheme()
+      setTimeout(() => generateTheme(), 500)
       return
     }
 
     const step = steps[currentStep]
+    if (!step) return
+
     const newMessage: Message = {
       role: 'assistant',
       content: step.question,
@@ -92,23 +94,32 @@ export default function CreatePage() {
 
   const handleAnswer = (answer: string | string[]) => {
     const step = steps[currentStep]
+    if (!step) return
+
     const answerText = Array.isArray(answer) ? answer.join(', ') : answer
+    if (!answerText && !step.optional) return
 
-    setMessages(prev => [...prev, { role: 'user', content: answerText }])
+    // Add user message
+    setMessages(prev => [...prev, { role: 'user', content: answerText || 'Saltar' }])
 
-    setFormData(prev => ({
-      ...prev,
+    // Update form data
+    const newFormData = {
+      ...formData,
       [step.id]: answer,
-    }))
+    }
+    setFormData(newFormData)
 
+    // Move to next step after a delay
     setTimeout(() => {
-      setCurrentStep(prev => prev + 1)
-      if (currentStep + 1 < steps.length) {
-        showNextQuestion()
+      const nextStep = currentStep + 1
+      setCurrentStep(nextStep)
+
+      if (nextStep < steps.length) {
+        setTimeout(() => showNextQuestion(), 300)
       } else {
-        generateTheme()
+        setTimeout(() => generateTheme(), 500)
       }
-    }, 500)
+    }, 400)
   }
 
   const generateTheme = async () => {
