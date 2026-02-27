@@ -56,5 +56,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/yourusername/anvilwp/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/yourusername/anvilwp/releases/tag/v1.0.0
+[Unreleased]: https://github.com/Josusanz/anvilwp/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/Josusanz/anvilwp/releases/tag/v1.0.0

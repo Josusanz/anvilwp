@@ -234,12 +234,12 @@ cd my-theme/
 git init
 git add .
 git commit -m "Initial theme"
-git remote add origin https://github.com/yourusername/my-theme.git
+git remote add origin https://github.com/Josusanz/my-theme.git
 git push -u origin main
 
 # On server:
 cd /path/to/wp-content/themes/
-git clone https://github.com/yourusername/my-theme.git
+git clone https://github.com/Josusanz/my-theme.git
 wp theme activate my-theme
 ```
 
@@ -330,7 +330,7 @@ AnvilWP is licensed under the [GPL-2.0 License](./LICENSE), just like WordPress 
 
 - **📖 Documentation**: [docs.anvilwp.com](https://docs.anvilwp.com)
 - **💬 Community**: [Discord](https://discord.gg/anvilwp)
-- **🐛 Report Bugs**: [GitHub Issues](https://github.com/yourusername/anvilwp/issues)
+- **🐛 Report Bugs**: [GitHub Issues](https://github.com/Josusanz/anvilwp/issues)
 - **📧 Email**: support@anvilwp.com
 - **𝕏 Twitter**: [@anvilwp](https://twitter.com/anvilwp)
 

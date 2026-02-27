@@ -265,7 +265,7 @@ export default function Home() {
                   Generar Theme Gratis →
                 </a>
                 <a
-                  href="https://github.com/yourusername/anvilwp"
+                  href="https://github.com/Josusanz/anvilwp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-secondary text-lg px-8 py-4"
@@ -300,7 +300,7 @@ export default function Home() {
             <div>
               <h4 className="font-semibold mb-4">Recursos</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="https://github.com/yourusername/anvilwp" className="hover:text-blue-400">GitHub</a></li>
+                <li><a href="https://github.com/Josusanz/anvilwp" className="hover:text-blue-400">GitHub</a></li>
                 <li><a href="#" className="hover:text-blue-400">Guía Claude Code</a></li>
                 <li><a href="#" className="hover:text-blue-400">Patrones de Diseño</a></li>
                 <li><a href="#" className="hover:text-blue-400">Changelog</a></li>

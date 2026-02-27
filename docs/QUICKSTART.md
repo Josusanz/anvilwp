@@ -264,7 +264,7 @@ R: Hostinger (barato), Cloudways (pro), o cualquiera con WordPress.
 
 - 📖 **Docs completas**: [docs.anvilwp.com](https://docs.anvilwp.com)
 - 💬 **Discord community**: [discord.gg/anvilwp](https://discord.gg/anvilwp)
-- 🐛 **Report bugs**: [GitHub Issues](https://github.com/yourusername/anvilwp/issues)
+- 🐛 **Report bugs**: [GitHub Issues](https://github.com/Josusanz/anvilwp/issues)
 - 📧 **Email**: support@anvilwp.com
 
 ---
